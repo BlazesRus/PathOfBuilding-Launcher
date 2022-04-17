@@ -48,28 +48,25 @@
     <RootNamespace>PathOfBuildingLauncher</RootNamespace>
 	<DefaultLanguage>en-US</DefaultLanguage>
   </PropertyGroup>
-  <PropertyGroup Label="WindowsGlobals"  Condition="'$(Platform)'=='Win32' Or '$(Platform)'=='x64' Or '$(Platform)'=='x86'">
+  <PropertyGroup Label="WindowsGlobals" Condition="'$(Platform)'=='Win32' Or '$(Platform)'=='x64' Or '$(Platform)'=='x86'">
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <PropertyGroup Label="AndroidGlobals"  Condition="'$(Platform)'=='ARM' Or '$(Platform)'=='ARM64'">
+  <PropertyGroup Label="AndroidGlobals" Condition="'$(Platform)'=='ARM' Or '$(Platform)'=='ARM64'">
     <Keyword>Android</Keyword>
     <ApplicationType>Android</ApplicationType>
     <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)'=='Debug' And ('$(Platform)'=='Win32' Or '$(Platform)'=='x64' Or '$(Platform)'=='x86')" Label="Configuration">
+  <PropertyGroup Condition="'$(Platform)'=='Win32' Or '$(Platform)'=='x64' Or '$(Platform)'=='x86'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release' And ('$(Platform)'=='Win32' Or '$(Platform)'=='x64' Or '$(Platform)'=='x86')" Label="Configuration">
+  <PropertyGroup Condition="'$(Platform)'=='ARM' Or '$(Platform)'=='ARM64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -187,6 +184,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='ARM' Or '$(Platform)'=='ARM64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>%(LibraryDependencies);GLESv1_CM;EGL;</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Launcher.cpp" />
   </ItemGroup>
@@ -194,6 +201,14 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SafeHandle.h" />
     <ClInclude Include="StringUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" Condition="'$(Platform)'=='ARM' Or '$(Platform)'=='ARM64'"/>
+    <ClInclude Include="android_native_app_glue.h" Condition="'$(Platform)'=='ARM' Or '$(Platform)'=='ARM64'"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="android_native_app_glue.c" Condition="'$(Platform)'=='ARM' Or '$(Platform)'=='ARM64'"/>
+    <ClCompile Include="main.cpp" Condition="'$(Platform)'=='ARM' Or '$(Platform)'=='ARM64'"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PathOfBuilding-Launcher.rc" />
